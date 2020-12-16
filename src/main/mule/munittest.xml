@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="708b45a9-2477-4b9e-bde1-a5c4f7e9d059" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="caca6e31-0926-4029-b421-2da4a349e200" >
+		<file:connection workingDir="C:\AAF" />
+	</file:config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="cbd9a46c-9681-4521-aa66-cb8957976328" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="P@$$w0rd" database="march20" />
+	</db:config>
+	<flow name="munittestFlow" doc:id="d2535898-61ea-437c-aed4-0e5999ca2425" >
+		<http:listener doc:name="Listener" doc:id="ab2867c7-eff7-432f-a23f-8855415838e3" config-ref="HTTP_Listener_config" path="/unit"/>
+		<file:read doc:name="Read" doc:id="3948bf68-499e-4761-a6ce-28f612ceff34" config-ref="File_Config" path="C:\AAF\Munit\msg1.txt" outputMimeType="application/json"/>
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="28cb2fe2-b5c3-4e4e-b6c5-d6ffdb69daff" />
+	</flow>
+	<flow name="munittestFlow1" doc:id="44b8b758-e5c0-4485-97ab-6819a2d5a52c" >
+		<http:listener doc:name="Listener" doc:id="f42936f1-d3ec-48c9-b3a5-70e15bcf9fbb" config-ref="HTTP_Listener_config" path="/test"/>
+		<db:select doc:name="Select" doc:id="568fbd15-9b07-4454-b1d7-ff4b85f62480" config-ref="Database_Config">
+			<db:sql ><![CDATA[select * from students where sid = 200]]></db:sql>
+			<db:input-parameters ><![CDATA[#['id':payload.sid]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="ad3de7e8-e002-43f8-9819-0cf2b5f0d9f6" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

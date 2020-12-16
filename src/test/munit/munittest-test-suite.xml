@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="munittest-test-suite.xml" />
+	<munit:test name="munittest-test-suite-munittestFlowTest" doc:id="306e1e94-d01c-467c-a577-1cfc40a5ec12" description="Test" ignore="true">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to munittestFlow" doc:id="c2a07a98-5a87-4205-8641-ea6bc78dbb6a" name="munittestFlow"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="6bb1fcc6-5cea-4bbc-a514-1ef50179ec87" message="The payload is null" is="#[MunitTools::notNullValue()]" expression="#[payload]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="munittest-test-suite-munittestFlow1Test" doc:id="a8e10956-79f0-4026-a069-7489e979ec72" description="Test">
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="522e3ad9-4c7d-4dc0-9f1d-270949745b74" >
+				<munit:payload value='{"sid": 200}' mediaType="application/json" />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to munittestFlow1" doc:id="5ac30adb-6d89-4a46-a938-fbb374165264" name="munittestFlow1"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Copy_of_Assert that" doc:id="1882fe3d-cd55-42f8-90a0-6d511846486e" message="The payload is null" is="#[MunitTools::notNullValue()]" expression="#[payload]" />
+		</munit:validation>
+	</munit:test>
+
+
+</mule>
